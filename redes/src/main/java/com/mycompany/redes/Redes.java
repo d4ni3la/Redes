@@ -53,7 +53,7 @@ class Result {
     }
     
     public String idClase (String red){
-        return "";
+        return "retorno cadena 1";
     }
     
 }
