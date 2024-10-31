@@ -19,24 +19,32 @@ public class Redes {
         System.out.println("");
         Scanner scan= new Scanner(System.in);
         ArrayList<Integer> binarios= new ArrayList<>();
-        ArrayList<Integer> binarios2= new ArrayList<>(binarios);
         
         binarios.add(1); binarios.add(2); binarios.add(4); binarios.add(8); binarios.add(16);
         binarios.add(32); binarios.add(64); binarios.add(128); 
-        Collections.reverseOrder();
+        Collections.reverse(binarios);
         
+        Result validacion= new Result();
         
-        Integer x= 240;
+        boolean error= true;
         
+        boolean response;
         //String y= Integer.toBinaryString(x);
         //System.out.println(y);
+        do {
+            System.out.println("Ingresa la red");
+            String red= scan.next();
+            response= validacion.valid(red);
+            if (response) {
+                System.out.println("ERROR. Red incorrecta");
+            }
+        } while (response);
         
-        System.out.println("Ingresa la red");
-        String red= scan.next();
+        /*
         System.out.println("Ingresa la mascara");
         String mask= scan.next();
         System.out.println("Ingresa el numero de subredes a segmentar: ");
-        int nSeg= scan.nextInt();
+        int nSeg= scan.nextInt();*/
         
         System.out.println(binarios);
         
@@ -54,6 +62,35 @@ class Result {
     
     public String idClase (String red){
         return "retorno cadena 1";
+    }
+    
+    public Boolean valid(String red){
+        boolean error= false;
+        String[] subcadena= red.split(".");
+        
+        // numero de elementos en la cadena
+        if (subcadena.length!=4) {
+            error= true;
+        }
+        for (int i = 0; i <subcadena.length; i++) {
+            Integer scad= Integer.parseInt(subcadena[i]);
+            if (scad<0 || scad>253) {
+                error= true;
+                break;
+            }else {
+                if (i==0) {
+                    if (scad>0 && scad<=127) {
+                        
+                    }
+                }
+            }
+        }
+        return error;
+    }
+    
+    public String clase(Integer sCad0){
+        
+        return "";
     }
     
 }
