@@ -36,7 +36,7 @@ public class Redes {
             String red= scan.next();
             response= validacion.valid(red);
             if (response) {
-                System.out.println("ERROR. Red incorrecta");
+                System.out.println("\tERROR. Red incorrecta");
             }
         } while (response);
         
@@ -89,8 +89,8 @@ class Result {
     }
     
     public String clase(Integer sCad0){
-        
-        return "";
+         
+       return "";
     }
     
 }
