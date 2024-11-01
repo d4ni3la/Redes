@@ -25,6 +25,7 @@ public class Redes {
         Collections.reverse(binarios);
         
         Result validacion= new Result();
+        Result resultadoClase= new Result();
         
         boolean error= true;
         
@@ -40,47 +41,44 @@ public class Redes {
             }
         } while (response);
         
+        System.out.println("La clase por default es: \t"+ validacion.resultadoClase);
         /*
         System.out.println("Ingresa la mascara");
         String mask= scan.next();
         System.out.println("Ingresa el numero de subredes a segmentar: ");
         int nSeg= scan.nextInt();*/
         
-        System.out.println(binarios);
+        //System.out.println(binarios);
         
     }
 }
 
 class Result {
-    public static ArrayList<Integer> And(String red, String mask){
-        ArrayList<Integer> arr= new ArrayList<>();
-        
-        
-        
-        return arr;
-    }
+    // Declara global para usarla en el main
+    public String resultadoClase;
     
     public String idClase (String red){
         return "retorno cadena 1";
     }
     
+    // validar si una cada subcadena es valida
     public Boolean valid(String red){
         boolean error= false;
-        String[] subcadena= red.split(".");
+        String[] subcadena= red.split("\\.");
         
         // numero de elementos en la cadena
-        if (subcadena.length!=4) {
+        if (subcadena.length>4 || subcadena.length<1) {
+            System.out.println("error 1");
             error= true;
-        }
-        for (int i = 0; i <subcadena.length; i++) {
-            Integer scad= Integer.parseInt(subcadena[i]);
-            if (scad<0 || scad>253) {
-                error= true;
-                break;
-            }else {
-                if (i==0) {
-                    if (scad>0 && scad<=127) {
-                        
+        }else{
+            for (int i = 0; i <subcadena.length; i++) {
+                Integer scad= Integer.parseInt(subcadena[i]);
+                if (scad<=0 || scad>253) {
+                    error= true;
+                    break;
+                }else {
+                    if (i==0) {
+                        resultadoClase= clase(scad);
                     }
                 }
             }
@@ -89,8 +87,15 @@ class Result {
     }
     
     public String clase(Integer sCad0){
-         
-       return "";
+        String charClase= "";
+        if (sCad0>=1 && sCad0<=127) {
+            charClase= "A";
+        }else if (sCad0>=128 && sCad0<=191) {
+            charClase= "B";
+        }else if (sCad0>=192 && sCad0<=253) {
+            charClase= "C";
+        }
+        return charClase;
     }
     
 }
