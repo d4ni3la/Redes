@@ -35,49 +35,69 @@ public class Redes {
 //Funcion Red de la IP, Retorna a que red pertenece la direccion IP, incluso si la red esta segmentada
 public static String redDeIp(String Ip, String mascara){
         //Separa los bytes 
-        String[] bitesMasc = mascara.split("\\.");
-        String[] bitesIp = Ip.split("\\.");
-        String bite = "";
+        String[] bytesMasc = mascara.split("\\.");
+        String[] bytesIp = Ip.split("\\.");
+        String byte1 = "";
         String red = "";
+        String numeroDecimal = "";
         
-        for (int i = 0; i <= bitesMasc.length-1; i++) {
+        for (int i = 0; i <= bytesMasc.length-1; i++) {
             //Masc
-            int numeroEntero = Integer.parseInt(bitesMasc[i]);
+            int numeroEntero = Integer.parseInt(bytesMasc[i]);
             String numeroBinario = Integer.toBinaryString(numeroEntero);
-            System.out.println("Marcara: "+numeroBinario);
             while (numeroBinario.length() != 8) {
                 //Se agrega un 0 al inicoi de la cadena para completar los o byts y hacer el AND correctamente
                 numeroBinario = 0 +numeroBinario;
             }
-            System.out.println("Mascara: "+numeroBinario);
             //IP
-            int numeroEnteroIp = Integer.parseInt(bitesIp[i]);
+            int numeroEnteroIp = Integer.parseInt(bytesIp[i]);
             String numeroBinarioIP = Integer.toBinaryString(numeroEnteroIp);
-            System.out.println("IP: "+numeroBinarioIP);
             while (numeroBinarioIP.length() != 8) {
                 //Se agrega un 0 al inicoi de la cadena para completar los o byts y hacer el AND correctamente
                 numeroBinarioIP = 0 + numeroBinarioIP;
             }
-            System.out.println("IP: "+numeroBinarioIP);
             //AND
             for (int x = 0; x < numeroBinario.length(); x++) {
-                char bitMasc = numeroBinario.charAt(x);
-                char bitIp = numeroBinarioIP.charAt(x);
-                if (bitMasc == '1' && bitIp == '1') {
-                    bite += "1";
+                char bytMasc = numeroBinario.charAt(x);
+                char bytIp = numeroBinarioIP.charAt(x);
+                if (bytMasc == '1' && bytIp == '1') {
+                    byte1 += "1";
                 }else
-                    bite +="0";
+                    byte1 +="0";
             }
             
-            BigInteger numeroBigInteger = new BigInteger(bite, 2); // El segundo argumento 2 indica base 2 (binario)
-            String numeroDecimal = numeroBigInteger.toString(10); // El segundo argumento 10 indica base 10 (decimal)
+            BigInteger numeroBigInteger = new BigInteger(byte1, 2); // El segundo argumento 2 indica base 2 (binario)
+            numeroDecimal = numeroBigInteger.toString(10); // El segundo argumento 10 indica base 10 (decimal)
             red += numeroDecimal+".";
-            bite = "";
+            byte1 = "";
         }
+        //Se toma el valor del ultimo Byte de la red para sumarlo con el resultado de la funcion nodosYBroadcast ¨para 
+        //sacar el resultado del broadcast
+        int ultimoByteRed = Integer.parseInt(numeroDecimal);
+        //Imprime el numero de IPs disponibles
+        System.out.println("Numero de IPs disponibles en la red: " +noNodos(Ip, mascara));
+        //Suma el numero de IPs disponibles y el ultimo Byte para sacar el broadcast +1
+        System.out.println("BroadCast: "+(ultimoByteRed+noNodos(Ip, mascara)+1));
+        //Se muestra si la red esta segmentada con la funcion redSegmentada
+        System.out.println(redSegmentada(mascara));
+        //Retorna la red a la que pertenece la IP
         return "La red es: "+red.substring(0, red.length()-1);
     }
-    //Funcion nodos, retorna el numero de nodos que hay en la red
-    public static void noNodosYBroadcast(String Ip, String mascara){
+
+    //Funcoin para detectar si la red esta segmentada
+    public static String redSegmentada(String mascara){
+        String[] bytesMasc = mascara.split("\\.");
+        String mensaje = "La red no esta segmentada";
+        for (int i = 0; i < bytesMasc.length; i++) {
+            int numeroEntero = Integer.parseInt(bytesMasc[i]);
+            if (numeroEntero != 0 && numeroEntero != 255) {
+                mensaje = "La red esta segmentada";
+            }
+        }
+        return mensaje;
+    }
+    //Funcion para sacar el numero de nodos disponibles en la red
+    public static int noNodos(String Ip, String mascara){
         int bits = 0;
         int noIps = 0;
         String[] bites = mascara.split("\\.");
@@ -101,9 +121,8 @@ public static String redDeIp(String Ip, String mascara){
                 }
             }
         }
-        System.out.println(bits);
         noIps = (int) Math.pow(2, bits) -2;
-        System.out.println("Numero de nodos disponibles = "+noIps);
+        return noIps;
     }
 
 
